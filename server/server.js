@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const SpotifyWebApi = require('spotify-web-api-node');
+const lyricsFinder = require('lyrics-finder');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -12,9 +14,9 @@ app.post('/refresh', (req, res) => {
   const refreshToken = req.body.refreshToken;
   console.log("hi")
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: 'http://localhost:3000',
-    clientId: '69a151701abb4b7a8ca74139ede6e72a',
-    clientSecret: '2243910908384d4aa2253510cf742a15',
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
     refreshToken,
 });
 
@@ -38,9 +40,9 @@ refreshAccessToken()
 app.post('/login', (req, res) => {
   const code = req.body.code;
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: 'http://localhost:3000',
-    clientId: '69a151701abb4b7a8ca74139ede6e72a',
-    clientSecret: '2243910908384d4aa2253510cf742a15'
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET
   });
 
 
@@ -59,5 +61,9 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.get('/lyrics', async (req, res) => {
+  const lyrics = await lyricsFinder(req.query.artist, req.query.track) || "No Lyrics Found"
+  res.json({lyrics});
+  });
 
 app.listen(3001);
