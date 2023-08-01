@@ -6,6 +6,7 @@ import TrackSearchResult from './TrackSearchResult'
 import Player from './Player'
 import axios from 'axios'
 
+
 const spotifyApi = new SpotifyWebApi({
  clientId: '69a151701abb4b7a8ca74139ede6e72a',
 })
